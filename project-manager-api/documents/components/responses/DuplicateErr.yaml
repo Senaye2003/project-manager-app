@@ -1,0 +1,5 @@
+description: Existing duplicate Information
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/DuplicateError.yaml

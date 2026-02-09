@@ -1,0 +1,33 @@
+delete:
+  summary: Delete members from a team
+  description: Delete members from team with {id}
+  tags:
+    - Team Members
+  parameters:
+    - name: teamId
+      in: path
+      required: true
+      description: Delete member from teams with id
+      schema:
+        type: integer
+        example: 1
+    - name: userId
+      in: path
+      required: true
+      description: ID of the user to remove from the team
+      schema:
+        type: integer
+        example: 2
+  responses:
+    '204':
+      description: Schema of Team
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Team.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '403':
+      $ref: ../components/responses/Unauthorized.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml

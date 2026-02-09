@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: Task API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local Dev
+  - url: https://project-manager-api-lyrz.onrender.com
+    description: Production server on render
+tags:
+  - name: Tasks
+    description: Task-related endpoints
+  - name: Teams
+    description: Team-related endpoints
+  - name: Team Members
+    description: Team Members-related endpoints
+  - name: Projects
+    description: Project-related endpoints
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  #auth paths
+  /api/auth/login:
+    $ref: paths/auth_login.yaml
+  /api/auth/signup:
+    $ref: paths/auth_signup.yaml
+  #users paths
+  /api/users:
+    $ref: paths/users.yaml
+  /api/users/me:
+    $ref: paths/users_me.yaml
+  /api/users/{id}:
+    $ref: paths/users_{id}.yaml
+  /api/users/{id}/role:
+    $ref: paths/users_{id}_role.yaml
+  #teams paths
+  /api/teams:
+    $ref: paths/teams.yaml
+  /api/teams/{id}:
+    $ref: paths/teamId.yaml
+  /api/teams/{teamId}/members:
+    $ref: paths/teamMember.yaml
+  /api/teams/{teamId}/members/{userId}:
+    $ref: paths/teamMemberId.yaml
+  #tasks paths
+  /api/tasks:
+    $ref: paths/tasks.yaml
+  /api/tasks/me:
+    $ref: paths/tasksMe.yaml
+  /api/tasks/{id}:
+    $ref: paths/tasksById.yaml
+  #projects paths
+  /api/projects:
+    $ref: paths/projects.yaml
+  /api/projects/{id}:
+    $ref: paths/projects-id.yaml
+  

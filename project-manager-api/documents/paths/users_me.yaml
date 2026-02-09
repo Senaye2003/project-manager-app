@@ -1,0 +1,50 @@
+get:
+  tags:
+    - Users
+  summary: Get current logged-in user
+  security:
+    - bearerAuth: []
+  responses:
+    '200':
+      description: The user profile
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/User.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          example:
+            error: Missing or invalid token
+patch:
+  tags:
+    - Users
+  summary: Update your own profile
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/UserUpdateInput.yaml
+  responses:
+    '200':
+      description: Successfully updated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/User.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          example:
+            error: Missing or invalid token
+    '409':
+      description: Email already in use
+      content:
+        application/json:
+          example:
+            error: Email already registered

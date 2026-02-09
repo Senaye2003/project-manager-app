@@ -1,0 +1,1006 @@
+openapi: 3.1.0
+info:
+  title: Task API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local Dev
+  - url: https://project-manager-api-lyrz.onrender.com
+    description: Production server on render
+security:
+  - bearerAuth: []
+tags:
+  - name: Tasks
+    description: Task-related endpoints
+  - name: Teams
+    description: Team-related endpoints
+  - name: Team Members
+    description: Team Members-related endpoints
+  - name: Projects
+    description: Project-related endpoints
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - Users
+      summary: Log in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginInput'
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              example:
+                accessToken: jwt-token-here
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              example:
+                error: Invalid credentials
+  /api/auth/signup:
+    post:
+      tags:
+        - Users
+      summary: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignupInput'
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              example:
+                message: User created with id 10
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              example:
+                error: Email already registered
+  /api/users:
+    get:
+      tags:
+        - Users
+      summary: Get all users (MANAGER only)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Missing or invalid token
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error: Forbidden:insufficient permission
+  /api/users/me:
+    get:
+      tags:
+        - Users
+      summary: Get current logged-in user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: The user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Missing or invalid token
+    patch:
+      tags:
+        - Users
+      summary: Update your own profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateInput'
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Missing or invalid token
+        '409':
+          description: Email already in use
+          content:
+            application/json:
+              example:
+                error: Email already registered
+  /api/users/{id}:
+    delete:
+      tags:
+        - Users
+      summary: Delete a user (MANAGER only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Missing or invalid token
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error: Forbidden:insufficient permission
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                error: User not found
+  /api/users/{id}/role:
+    patch:
+      tags:
+        - Users
+      summary: Update a user's role (MANAGER only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdateInput'
+      responses:
+        '200':
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Missing or invalid token
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error: Forbidden:insufficient permission
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                error: User not found
+  /api/teams:
+    get:
+      summary: List all teams
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+    post:
+      summary: Create a new team
+      tags:
+        - Teams
+      requestBody:
+        require: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '201':
+          description: Team created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/DuplicateErr'
+  /api/teams/{id}:
+    get:
+      summary: List a particular team schema
+      description: Get posts with {id}
+      tags:
+        - Teams
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Filter teams by id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Team Schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Make changes to a team
+      description: Update posts with {id}
+      tags:
+        - Teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '201':
+          description: Team updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/DuplicateErr'
+    delete:
+      summary: Delete a team
+      description: Delete posts with {id}
+      tags:
+        - Teams
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Filter teams by id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: Schema of Team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/teams/{teamId}/members:
+    post:
+      summary: Add a member to a team with {id}
+      tags:
+        - Team Members
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          description: Team id
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        require: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+            example:
+              userId: 2
+      responses:
+        '201':
+          description: Member added created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/DuplicateErr'
+  /api/teams/{teamId}/members/{userId}:
+    delete:
+      summary: Delete members from a team
+      description: Delete members from team with {id}
+      tags:
+        - Team Members
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          description: Delete member from teams with id
+          schema:
+            type: integer
+            example: 1
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user to remove from the team
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '204':
+          description: Schema of Team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/tasks:
+    get:
+      summary: List all tasks
+      tags:
+        - Tasks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+    post:
+      summary: Create a new task
+      tags:
+        - Tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+  /api/tasks/me:
+    get:
+      summary: List tasks assigned to logged in user
+      tags:
+        - Tasks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+  /api/tasks/{id}:
+    patch:
+      summary: Update a task by id
+      tags:
+        - Tasks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task id
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTask'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTask'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete a task by id
+      tags:
+        - Tasks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+  /api/projects:
+    get:
+      summary: List all projects
+      tags:
+        - Projects
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
+          description: Free-text search applied to project name/description
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+              - startDate
+              - endDate
+          required: false
+          description: Field to sort by
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          required: false
+          description: Sort direction
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: Maximum number of items to return (1-100)
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: Pagination offset (0 or greater)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Create a new project
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/projects/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: Project ID
+    get:
+      summary: Get a project by ID
+      tags:
+        - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Update a project
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      summary: Delete a project
+      tags:
+        - Projects
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserLoginInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    UserSignupInput:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+            - DEVELOPER
+            - MANAGER
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+    UserUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    RoleUpdateInput:
+      type: object
+      required:
+        - role
+      properties:
+        role:
+          type: string
+          enum:
+            - DEVELOPER
+            - MANAGER
+    Team:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Team 2
+        projects:
+          readOnly: true
+          type: array
+          description: IDs of Projects associated with this team
+          items:
+            type: integer
+          example:
+            - 1
+            - 2
+        members:
+          readOnly: true
+          description: IDs of users that belong to this team
+          type: array
+          items:
+            type: integer
+          example:
+            - 5
+            - 6
+    AuthenticationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Invalid Token
+        details:
+          type: array
+          items:
+            type: string
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Validation Failed
+        details:
+          type: array
+          items:
+            type: string
+    AuthorizationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Unauthorized Access
+        details:
+          type: array
+          items:
+            type: string
+    DuplicateError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Duplicate name exists
+        details:
+          type: array
+          items:
+            type: string
+    NotFoundError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: ID not found
+        details:
+          type: array
+          items:
+            type: string
+    Task:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: integer
+          example: 1
+        projectId:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Design Dashboard
+        status:
+          type: string
+          enum:
+            - TO_DO
+            - IN_PROGRESS
+            - UNDER_REVIEW
+            - COMPLETE
+            - CANCELLED
+          example: TO_DO
+        assignedTo:
+          type: integer
+          description: ID of the user that the task is assigned to
+          example: 1
+        dueDate:
+          type: string
+          format: date-time
+          example: '2025-12-12'
+        createdAt:
+          readOnly: true
+          type: string
+          format: date-time
+          example: '2025-08-05'
+        updatedAt:
+          readOnly: true
+          type: string
+          format: date-time
+          example: '2025-08-06'
+        assignee:
+          readOnly: true
+          type: object
+          description: User that is assigned the task
+          properties:
+            name:
+              type: string
+              example: Alice Long
+            id:
+              type: integer
+              example: 1
+    CreateTaskResponse:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Design Dashboard
+        status:
+          type: string
+          enum:
+            - TO_DO
+            - IN_PROGRESS
+            - UNDER_REVIEW
+            - COMPLETE
+            - CANCELLED
+          example: TO_DO
+        dueDate:
+          type: string
+          format: date-time
+          example: '2025-12-12'
+        createdAt:
+          readOnly: true
+          type: string
+          format: date-time
+          example: '2025-08-05'
+        updatedAt:
+          readOnly: true
+          type: string
+          format: date-time
+          example: '2025-08-06'
+        projectId:
+          type: integer
+          example: 1
+        assignedTo:
+          type: integer
+          description: ID of the user that the task is assigned to
+          example: 1
+    UpdateTask:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: integer
+          example: 1
+        title:
+          readOnly: true
+          type: string
+          example: Design Dashboard
+        status:
+          type: string
+          enum:
+            - TO_DO
+            - IN_PROGRESS
+            - UNDER_REVIEW
+            - COMPLETE
+            - CANCELLED
+          example: TO_DO
+        dueDate:
+          type: string
+          format: date-time
+          example: '2025-12-12'
+        createdAt:
+          readOnly: true
+          type: string
+          format: date-time
+          example: '2025-08-05'
+        updatedAt:
+          readOnly: true
+          type: string
+          format: date-time
+          example: '2025-08-06'
+        projectId:
+          readOnly: true
+          type: integer
+          example: 1
+        assignedTo:
+          type: integer
+          description: ID of the user that the task is assigned to
+          example: 1
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: Website Redesign
+        description:
+          type: string
+          example: Redesign company website to improve conversions
+        status:
+          type: string
+          enum:
+            - TO_DO
+            - IN_PROGRESS
+            - UNDER_REVIEW
+            - COMPLETE
+            - CANCELLED
+          example: TO_DO
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2025-10-01T00:00:00.000Z'
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2025-12-31T00:00:00.000Z'
+        teamId:
+          type: integer
+          nullable: true
+          example: 2
+        projectManagerId:
+          type: integer
+          nullable: true
+          example: 3
+  responses:
+    Unauthenticated:
+      description: Unauthenticated user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthenticationError'
+    BadRequest:
+      description: Invalid Input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    Unauthorized:
+      description: Unauthorized Access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthorizationError'
+    DuplicateErr:
+      description: Existing duplicate Information
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DuplicateError'
+    NotFound:
+      description: ID Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'

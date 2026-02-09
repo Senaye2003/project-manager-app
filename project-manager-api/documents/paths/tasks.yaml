@@ -1,0 +1,40 @@
+get:
+  summary: List all tasks
+  tags:
+    - Tasks
+  parameters: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../components/schemas/Task.yaml
+    '401':
+      $ref: ../components/responses/Unauthenticated.yaml
+post:
+  summary: Create a new task
+  tags:
+    - Tasks
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/Task.yaml
+  responses:
+    '201':
+      description: Task created successfully
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/CreateTaskResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthenticated.yaml
+    '403':
+      $ref: ../components/responses/Unauthorized.yaml
+

@@ -1,0 +1,33 @@
+delete:
+  tags:
+    - Users
+  summary: Delete a user (MANAGER only)
+  security:
+    - bearerAuth: []
+  parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '204':
+      description: Deleted successfully
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          example:
+            error: Missing or invalid token
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          example:
+            error: Forbidden:insufficient permission
+    '404':
+      description: Not found
+      content:
+        application/json:
+          example:
+            error: User not found

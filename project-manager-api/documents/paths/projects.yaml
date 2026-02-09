@@ -1,0 +1,71 @@
+get:
+  summary: List all projects
+  tags:
+    - Projects
+  parameters:
+    - in: query
+      name: search
+      schema:
+        type: string
+      required: false
+      description: Free-text search applied to project name/description
+    - in: query
+      name: sortBy
+      schema:
+        type: string
+        enum: [id, name, startDate, endDate]
+      required: false
+      description: Field to sort by
+    - in: query
+      name: sortOrder
+      schema:
+        type: string
+        enum: [asc, desc]
+      required: false
+      description: Sort direction
+    - in: query
+      name: limit
+      schema:
+        type: integer
+      required: false
+      description: Maximum number of items to return (1-100)
+    - in: query
+      name: offset
+      schema:
+        type: integer
+      required: false
+      description: Pagination offset (0 or greater)
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../components/schemas/projectsSchemas/Project.yaml
+    '401':
+      $ref: '../components/responses/Unauthorized.yaml'
+
+post:
+  summary: Create a new project
+  tags:
+    - Projects
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/projectsSchemas/Project.yaml
+  responses:
+    '201':
+      description: Project created
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/projectsSchemas/Project.yaml
+    '400':
+      $ref: '../components/responses/BadRequest.yaml'
+    '401':
+      $ref: '../components/responses/Unauthorized.yaml'
+

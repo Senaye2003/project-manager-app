@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    readOnly: true
+    type: integer
+    example: 1
+  title:
+    type: string
+    example: Design Dashboard
+  status:
+    type: string
+    enum:
+     - TO_DO
+     - IN_PROGRESS
+     - UNDER_REVIEW
+     - COMPLETE
+     - CANCELLED
+    example: TO_DO
+  dueDate:
+    type: string
+    format: date-time
+    example: 2025-12-12
+  createdAt:
+    readOnly: true
+    type: string
+    format: date-time
+    example: 2025-08-05
+  updatedAt:
+    readOnly: true
+    type: string
+    format: date-time
+    example: 2025-08-06
+  projectId:
+    type: integer
+    example: 1
+  assignedTo:
+    type: integer
+    description: ID of the user that the task is assigned to
+    example: 1

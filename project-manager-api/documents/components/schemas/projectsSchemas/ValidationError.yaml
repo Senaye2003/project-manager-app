@@ -1,0 +1,11 @@
+type: object
+properties:
+  errors:
+    type: array
+    items:
+      type: string
+    description: A list of validation error messages
+example:
+  errors:
+    - "name is required"
+    - "description must be at least 10 characters"

@@ -1,0 +1,57 @@
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: integer
+    description: Project ID
+
+get:
+  summary: Get a project by ID
+  tags:
+    - Projects
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/projectsSchemas/Project.yaml
+    '401':
+      $ref: '../components/responses/Unauthorized.yaml'
+    '404':
+      $ref: '../components/responses/NotFound.yaml'
+
+patch:
+  summary: Update a project
+  tags:
+    - Projects
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/projectsSchemas/Project.yaml
+  responses:
+    '200':
+      description: Project updated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/projectsSchemas/Project.yaml
+    '400':
+      $ref: '../components/responses/BadRequest.yaml'
+    '401':
+      $ref: '../components/responses/Unauthorized.yaml'
+
+delete:
+  summary: Delete a project
+  tags:
+    - Projects
+  responses:
+    '204':
+      description: Deleted
+    '401':
+      $ref: '../components/responses/Unauthorized.yaml'
+    '404':
+      $ref: '../components/responses/NotFound.yaml'

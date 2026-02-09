@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    readOnly: true
+    type: integer
+    example: 1
+  name:
+    type: string
+    example: Team 2
+  projects:
+    readOnly: true
+    type: array
+    description: IDs of Projects associated with this team
+    items:
+      type: integer
+    example: [1, 2]
+  members:
+    readOnly: true
+    description: IDs of users that belong to this team
+    type: array
+    items:
+      type: integer
+    example: [5, 6]

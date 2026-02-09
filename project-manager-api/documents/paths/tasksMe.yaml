@@ -1,0 +1,14 @@
+get:
+  summary: List tasks assigned to logged in user
+  tags:
+    - Tasks
+  parameters: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Task.yaml
+    '401':
+      $ref: ../components/responses/Unauthenticated.yaml

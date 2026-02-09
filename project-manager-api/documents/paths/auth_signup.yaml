@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Users
+  summary: Create a new user account
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/UserSignupInput.yaml
+  responses:
+    '201':
+      description: User successfully created
+      content:
+        application/json:
+          example:
+            message: User created with id 10
+    '409':
+      description: Email already exists
+      content:
+        application/json:
+          example:
+            error: Email already registered

@@ -1,0 +1,9 @@
+type: object
+properties:
+  error:
+    type: string
+    example: Unauthorized Access
+  details:
+    type: array
+    items:
+      type: string

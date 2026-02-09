@@ -1,0 +1,5 @@
+description: Unauthenticated user
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/AuthenticationError.yaml

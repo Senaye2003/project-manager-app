@@ -1,0 +1,109 @@
+  // This is your Prisma schema file,
+  // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+  // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+  // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+  generator client {
+    provider = "prisma-client-js"
+    output   = "../src/generated/prisma"
+  }
+
+  datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+  }
+  enum Role {
+    MANAGER
+    DEVELOPER
+  }
+
+  enum TaskStatus {
+    TO_DO
+    IN_PROGRESS
+    UNDER_REVIEW
+    COMPLETE
+    CANCELLED
+  }
+
+  enum ProjectStatus {
+    TO_DO
+    IN_PROGRESS
+    UNDER_REVIEW
+    COMPLETE
+    CANCELLED
+  }
+
+  model Team {
+    id Int @id @default(autoincrement())
+    name String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt
+
+    projects Project[]
+    members TeamMember[]
+
+    @@map("teams")
+  }
+
+  model User {
+    id Int @id @default(autoincrement())
+    email String @unique
+    password String
+    name String
+    role Role
+    updatedAt DateTime @updatedAt
+    
+    managedProjects Project[] @relation("ProjectManager")
+    assignedTasks Task[] @relation("AssignedTasks")
+    teams TeamMember[]
+
+    @@map("users")
+  }
+
+  model Project {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(100)
+    description String
+    status ProjectStatus
+    startDate DateTime? @map("start_date")
+    endDate DateTime? @map("end_date")
+    updatedAt DateTime @updatedAt
+
+    teamId Int @map("team_id")
+    team Team @relation(fields: [teamId], references: [id])
+    projectManagerId Int @map("project_manager_id")
+    projectManager User @relation("ProjectManager", fields: [projectManagerId], references: [id])
+
+    tasks Task[]
+    
+    @@unique([teamId, name])
+    @@map("projects")
+  }
+
+  model Task {
+    id Int @id @default(autoincrement())
+    title String
+    status TaskStatus
+    dueDate DateTime? @map("due_date")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt
+
+    projectId Int @map("project_id")
+    project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    assignedTo Int? @map("assigned_to")
+    assignee User? @relation("AssignedTasks", fields: [assignedTo], references: [id])
+
+    @@map("tasks")
+  }
+
+  model TeamMember {
+    teamId Int @map("team_id")
+    userId Int @map("user_id")
+
+    team Team @relation(fields: [teamId], references: [id])
+    user User @relation(fields: [userId], references: [id])
+
+    @@id([teamId, userId])
+    @@map("team_members")
+  }

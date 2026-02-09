@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Users
+  summary: Log in a user
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/UserLoginInput.yaml
+  responses:
+    '200':
+      description: Login success
+      content:
+        application/json:
+          example:
+            accessToken: jwt-token-here
+    '401':
+      description: Invalid credentials
+      content:
+        application/json:
+          example:
+            error: Invalid credentials

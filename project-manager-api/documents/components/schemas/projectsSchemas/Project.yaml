@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: integer
+    readOnly: true
+    example: 1
+  name:
+    type: string
+    example: Website Redesign
+  description:
+    type: string
+    example: Redesign company website to improve conversions
+  status:
+    type: string
+    enum:
+      - TO_DO
+      - IN_PROGRESS
+      - UNDER_REVIEW
+      - COMPLETE
+      - CANCELLED
+    example: TO_DO
+  startDate:
+    type: string
+    format: date-time
+    nullable: true
+    example: 2025-10-01T00:00:00.000Z
+  endDate:
+    type: string
+    format: date-time
+    nullable: true
+    example: 2025-12-31T00:00:00.000Z
+  teamId:
+    type: integer
+    nullable: true
+    example: 2
+  projectManagerId:
+    type: integer
+    nullable: true
+    example: 3

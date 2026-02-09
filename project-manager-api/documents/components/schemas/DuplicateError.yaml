@@ -1,0 +1,9 @@
+type: object
+properties:
+  error:
+    type: string
+    example: Duplicate name exists
+  details:
+    type: array
+    items:
+      type: string

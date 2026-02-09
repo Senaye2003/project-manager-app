@@ -1,0 +1,5 @@
+description: Unauthorized Access
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/AuthorizationError.yaml

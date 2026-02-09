@@ -1,0 +1,80 @@
+get:
+  summary: List a particular team schema 
+  description: Get posts with {id}
+  tags:
+    - Teams
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: Filter teams by id
+      schema:
+        type: integer
+        example: 1
+  responses:
+    '200':
+      description: Team Schema
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Team.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '403':
+      $ref: ../components/responses/Unauthorized.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+put:
+  summary: Make changes to a team
+  description: Update posts with {id}
+  tags:
+    - Teams
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/Team.yaml
+  responses:
+    '201':
+      description: Team updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Team.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthenticated.yaml
+    '403':
+      $ref: ../components/responses/Unauthorized.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+    '409':
+      $ref: ../components/responses/DuplicateErr.yaml
+delete:
+  summary: Delete a team
+  description: Delete posts with {id}
+  tags:
+    - Teams
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: Filter teams by id
+      schema:
+        type: integer
+        example: 1
+  responses:
+    '204':
+      description: Schema of Team
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Team.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '403':
+      $ref: ../components/responses/Unauthorized.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+

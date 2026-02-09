@@ -1,0 +1,5 @@
+description: ID Not found
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/NotFoundError.yaml
