@@ -34,16 +34,22 @@ export function Tasks() {
 
   }
   return (
-    <>
-      {tasks.map((task)=> (
-        <div key={task.id}>
-           <p > {task.title} </p>
-           <p > {task.status} </p>
-           <button onClick={() => handleUpdate(task.id)}> Update </button>
-        </div>
-        
-      ))}
-    </>
+
+   <>
+    {tasks.map((task) => (
+      <div className="card" key={task.id}>
+        <p><strong>{task.title}</strong></p>
+        <p>Status: {task.status}</p>
+
+        <button
+          className="btn"
+          onClick={() => handleUpdate(task.id)}
+        >
+          Update
+        </button>
+      </div>
+    ))}
+  </>
   )
 
   ;
