@@ -12,11 +12,17 @@ export function Login() {
     e.preventDefault();
 
     try {
-      const response = await login({ email, password });
-      localStorage.setItem("token", response.token);
+      const response = await login({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+      
+      localStorage.setItem("token", response.accessToken);
+
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
+      alert("Invalid email or password");
     }
   };
 
@@ -30,6 +36,7 @@ export function Login() {
           required
           onChange={(e) => setEmail(e.target.value)}
         />
+
         <input
           type="password"
           placeholder="password"
@@ -37,6 +44,7 @@ export function Login() {
           required
           onChange={(e) => setPassword(e.target.value)}
         />
+
         <button type="submit">Login</button>
       </form>
     </div>

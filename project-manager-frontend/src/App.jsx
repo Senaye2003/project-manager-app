@@ -2,8 +2,8 @@ import "./App.css";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 import { Login } from "./components/Login";
-import { ProtectedRoute } from "./pages/ProtectedRoute";
-import { Dashboard } from "../pages/Dashboard";
+import { ProtectedRoute } from "./layouts/ProtectedRoute";
+import { Dashboard } from "./pages/dashboard";
 import { Projects } from "./pages/Projects";
 import { Tasks } from "./pages/Tasks";
 import { Teams } from "./pages/Teams";

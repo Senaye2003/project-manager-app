@@ -29,17 +29,26 @@ export async function signup(name, email, password, role = 'DEVELOPER') {
 }
 
 export async function login(email, password) {
-  const user = await findByEmail(email);
-  if (!user) throw new Error('Invalid credentials.');
+  const normalizedEmail = email.trim().toLowerCase();
+  console.log("email from request:", normalizedEmail);
+  console.log("password from request:", password);
+
+  const user = await findByEmail(normalizedEmail);
+  console.log("user found:", user ? user.email : null);
+
+  if (!user) throw new Error("Invalid credentials.");
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) throw new Error('Invalid credentials.');
+  console.log("password valid:", valid);
+
+  if (!valid) throw new Error("Invalid credentials.");
 
   const token = jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: "1h" }
   );
+
   return token;
 }
 
