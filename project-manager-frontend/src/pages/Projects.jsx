@@ -62,15 +62,18 @@ export function Projects() {
   return (
     <>
       <button onClick={handleCreate}>Create Project</button>
-      {projects.map((project) => (
-        <div key={project.id}>
-          <p> Project: {project.name}</p>
-          <p> Status: {project.status} </p>
-          <p> Description: {project.description}</p>
-          <button onClick={() => handleDelete(project.id)}> Delete </button>
-          <button onClick={() => handleUpdate(project.id)}> Update </button>
-        </div>
-      ))}
+      <div className="card">
+        {projects.map((project) => (
+          <div key={project.id}>
+            <p> Project: {project.name}</p>
+            <p> Status: {project.status} </p>
+            <p> Description: {project.description}</p>
+            <button className="btn btn--danger" onClick={() => handleDelete(project.id)}> Delete </button>
+            <button className="btn" onClick={() => handleUpdate(project.id)}> Update </button>
+          </div>
+        ))}
+      </div>
+      
     </>
   );
 }
