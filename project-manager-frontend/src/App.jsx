@@ -1,27 +1,27 @@
+import "./App.css";
+import { Route, Routes, Navigate } from "react-router-dom";
 
-import './App.css'
-import { Login } from './components/Login'
-import { Dashboard } from './pages/dashboard'
-import { Tasks } from './pages/Tasks'
-import { Projects } from './pages/Projects'
-import { Teams } from './pages/Teams'
-import { ProtectedRoute } from './layouts/ProtectedRoute'
-import { Route, Routes } from "react-router-dom"
+import { Login } from "./components/Login";
+import { ProtectedRoute } from "./pages/ProtectedRoute";
+import { Dashboard } from "../pages/Dashboard";
+import { Projects } from "./pages/Projects";
+import { Tasks } from "./pages/Tasks";
+import { Teams } from "./pages/Teams";
+
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        <Route element={<ProtectedRoute />}>
-           <Route path="/dashboard" element={<Dashboard />} />
-           <Route path="/projects" element={<Projects />} />
-           <Route path="/tasks" element={<Tasks />}/>
-           <Route path="/teams" element={<Teams />}/>
-        </Route>
-      </Routes>
-    </>
-  )
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/teams" element={<Teams />} />
+      </Route>
+    </Routes>
+  );
 }
 
-export default App
+export default App;
