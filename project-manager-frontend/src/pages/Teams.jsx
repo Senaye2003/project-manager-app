@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import { getAllTeams, createTeam } from "../api/teams";
+
 export function Teams() {
   const [teams, setTeams] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
-      const teamsSet = await getAllTeams();
-      setTeams(teamsSet);
+      try {
+        const teamsSet = await getAllTeams();
+        setTeams(teamsSet);
+      } catch (error) {
+        console.error("failed to fetch teams", error);
+      }
     };
+
     fetchData();
   }, []);
 
@@ -18,11 +25,12 @@ export function Teams() {
       };
 
       const newTeam = await createTeam(newTeamData);
-      setTeams([...teams, newTeam]);
+      setTeams((prev) => [...prev, newTeam]);
     } catch (error) {
       console.error("create failed", error);
     }
   }
+
   return (
     <>
       <button
@@ -33,14 +41,14 @@ export function Teams() {
         Create Team
       </button>
 
-      {teams.map((team) => (
-        <div className="card" key={team.id}>
-          <p>
-            <strong>{team.name}</strong>
-          </p>
-          <p>{team.description}</p>
-        </div>
-      ))}
+      <div className="list">
+        {teams.map((team) => (
+          <div className="card" key={team.id}>
+            <p><strong>{team.name}</strong></p>
+            <p>{team.description}</p>
+          </div>
+        ))}
+      </div>
     </>
   );
 }

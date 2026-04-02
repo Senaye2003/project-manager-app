@@ -1,6 +1,5 @@
 import "./App.css";
-import { Route, Routes, Navigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Route, Routes, Navigate, Link, Outlet, useNavigate } from "react-router-dom";
 
 import { Login } from "./components/Login";
 import { ProtectedRoute } from "./layouts/ProtectedRoute";
@@ -9,9 +8,16 @@ import { Projects } from "./pages/Projects";
 import { Tasks } from "./pages/Tasks";
 import { Teams } from "./pages/Teams";
 
-function App() {
+function Layout() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
-    <div className="app">
+    <>
       <div className="navbar">
         <h3>Project Manager</h3>
 
@@ -21,21 +27,35 @@ function App() {
           <Link to="/tasks">Tasks</Link>
           <Link to="/teams">Teams</Link>
         </div>
+
+        <button className="btn btn--danger" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
       <div className="container">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Outlet />
+      </div>
+    </>
+  );
+}
 
-          <Route element={<ProtectedRoute />}>
+function App() {
+  return (
+    <div className="app">
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/teams" element={<Teams />} />
           </Route>
-        </Routes>
-      </div>
+        </Route>
+      </Routes>
     </div>
   );
 }
