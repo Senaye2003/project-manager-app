@@ -13,8 +13,12 @@ export async function signupUser(req, res) {
     const { name, email, password, role } = req.body;
     const user = await signup(name, email, password, role);
 
+    // Immediately mint a JWT so the client can log the new user in
+    const accessToken = await login(email, password);
+
     res.status(201).json({
       message: `User created with id ${user.id}`,
+      accessToken,
     });
   } catch (err) {
     const status = err.status || 400;
