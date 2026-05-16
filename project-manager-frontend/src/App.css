@@ -1,0 +1,422 @@
+/* =========================================================================
+   Shell
+   ========================================================================= */
+.app {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--s-8) var(--s-6);
+  width: 100%;
+}
+
+/* =========================================================================
+   Navbar
+   ========================================================================= */
+.navbar {
+  height: 56px;
+  background: var(--nav-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--s-6);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.navbar h3 {
+  color: var(--nav-fg-active);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.navbar__links {
+  display: flex;
+  gap: var(--s-1);
+}
+
+.navbar__links a {
+  color: var(--nav-fg);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.navbar__links a:hover {
+  color: var(--nav-fg-active);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.navbar__links a.active {
+  color: var(--nav-fg-active);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* =========================================================================
+   Page header
+   ========================================================================= */
+.page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--s-6);
+}
+
+.page-header__subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* =========================================================================
+   Buttons
+   ========================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--r-sm);
+  background: var(--primary);
+  color: white;
+  transition: background-color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.btn--secondary {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn--secondary:hover {
+  background: var(--surface-muted);
+  border-color: var(--border-strong);
+}
+
+.btn--danger {
+  background: var(--danger);
+}
+
+.btn--danger:hover {
+  background: var(--danger-hover);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 6px 10px;
+}
+
+.btn--ghost:hover {
+  background: var(--surface-muted);
+  color: var(--text-primary);
+}
+
+.btn--sm {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* =========================================================================
+   Card
+   ========================================================================= */
+.card {
+  background: var(--surface);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.card h3 {
+  margin-bottom: var(--s-4);
+  color: var(--text-primary);
+}
+
+.card p {
+  margin-bottom: var(--s-2);
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.card p strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* =========================================================================
+   List of items
+   ========================================================================= */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+/* =========================================================================
+   Dashboard
+   ========================================================================= */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--s-4);
+}
+
+.stat-card {
+  background: var(--surface);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.05s;
+}
+
+.stat-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card:active {
+  transform: translateY(1px);
+}
+
+.stat-card__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--s-3);
+}
+
+.stat-card__value {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.stat-card__hint {
+  margin-top: var(--s-3);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* =========================================================================
+   Forms (inputs inside .card form)
+   ========================================================================= */
+.card form,
+form.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.login-input {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.login-input::placeholder {
+  color: var(--text-muted);
+}
+
+.login-input:hover {
+  border-color: var(--border-strong);
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+select.login-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3e%3cpath fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M3 4.5l3 3 3-3'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+input[type="date"].login-input {
+  font-family: inherit;
+  color: var(--text-primary);
+}
+
+/* =========================================================================
+   Status badges
+   ========================================================================= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 999px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge--TO_DO {
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+.badge--IN_PROGRESS {
+  background: var(--info-soft);
+  color: var(--info);
+}
+.badge--UNDER_REVIEW {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+.badge--COMPLETE {
+  background: var(--success-soft);
+  color: var(--success);
+}
+.badge--CANCELLED {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* =========================================================================
+   Messages / banners
+   ========================================================================= */
+.banner {
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: var(--s-4);
+}
+
+.banner--error {
+  border-color: rgba(220, 38, 38, 0.2);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.banner--success {
+  border-color: rgba(22, 163, 74, 0.2);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+/* =========================================================================
+   Empty state
+   ========================================================================= */
+.empty-state {
+  padding: var(--s-12) var(--s-6);
+  text-align: center;
+  background: var(--surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-lg);
+  color: var(--text-muted);
+}
+
+.empty-state h3 {
+  color: var(--text-primary);
+  margin-bottom: var(--s-1);
+}
+
+/* =========================================================================
+   Item card (used inside .list)
+   ========================================================================= */
+.item-card {
+  background: var(--surface);
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.item-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.item-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-2);
+}
+
+.item-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.item-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: var(--s-2);
+}
+
+.item-card__meta span strong {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.item-card__desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: var(--s-1);
+}
+
+.item-card__actions {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+}

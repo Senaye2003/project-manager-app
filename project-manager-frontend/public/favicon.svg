@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Clipboard body -->
+  <rect x="10" y="10" width="44" height="50" rx="6" ry="6" fill="#1e293b"/>
+  <!-- Clipboard clip at the top -->
+  <rect x="22" y="4" width="20" height="10" rx="2" ry="2" fill="#334155"/>
+  <rect x="26" y="2" width="12" height="6" rx="1.5" ry="1.5" fill="#475569"/>
+  <!-- Three checklist rows -->
+  <!-- Row 1: completed (filled check) -->
+  <rect x="16" y="22" width="8" height="8" rx="1.5" ry="1.5" fill="#22c55e"/>
+  <path d="M17.8 26 L20 28 L23 24" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="28" y="24" width="20" height="4" rx="1" ry="1" fill="#cbd5e1"/>
+  <!-- Row 2: completed -->
+  <rect x="16" y="34" width="8" height="8" rx="1.5" ry="1.5" fill="#22c55e"/>
+  <path d="M17.8 38 L20 40 L23 36" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="28" y="36" width="16" height="4" rx="1" ry="1" fill="#cbd5e1"/>
+  <!-- Row 3: pending (empty box) -->
+  <rect x="16" y="46" width="8" height="8" rx="1.5" ry="1.5" fill="none" stroke="#64748b" stroke-width="1.6"/>
+  <rect x="28" y="48" width="18" height="4" rx="1" ry="1" fill="#94a3b8"/>
+</svg>

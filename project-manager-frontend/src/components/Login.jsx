@@ -1,7 +1,7 @@
 import "../styles/login.css";
 import { login } from "../api/auth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -16,9 +16,8 @@ export function Login() {
         email: email.trim().toLowerCase(),
         password,
       });
-      
-      localStorage.setItem("token", response.accessToken);
 
+      localStorage.setItem("token", response.accessToken);
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
@@ -27,26 +26,39 @@ export function Login() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="email address"
-          value={email}
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
+    <div className="login-page">
+      <div className="login-card">
+        <h1 className="login-title">Project Manager</h1>
+        <p className="login-subtitle">Sign in to continue</p>
 
-        <input
-          type="password"
-          placeholder="password"
-          value={password}
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <form className="login-form" onSubmit={handleLogin}>
+          <input
+            className="login-input"
+            type="email"
+            placeholder="Email address"
+            value={email}
+            required
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <button type="submit">Login</button>
-      </form>
+          <input
+            className="login-input"
+            type="password"
+            placeholder="Password"
+            value={password}
+            required
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button className="btn login-btn" type="submit">
+            Login
+          </button>
+        </form>
+
+        <p className="auth-switch">
+          Don’t have an account? <Link to="/signup">Sign up</Link>
+        </p>
+      </div>
     </div>
   );
 }

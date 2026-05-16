@@ -1,50 +1,77 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAllProjects } from "../api/projects";
 import { getMyTasks } from "../api/tasks";
 import { getAllTeams } from "../api/teams";
-import { useState } from "react";
 
 export function Dashboard() {
-  const [project, setProject] = useState([]);
-  const [task, setTask] = useState([]);
-  const [team, setTeam] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
-      const projects = await getAllProjects();
-      setProject(projects);
-
-      const tasks = await getMyTasks();
-      setTask(tasks);
-
-      const teams = await getAllTeams();
-      setTeam(teams);
+      try {
+        const [projectsData, tasksData, teamsData] = await Promise.all([
+          getAllProjects(),
+          getMyTasks(),
+          getAllTeams(),
+        ]);
+        setProjects(projectsData);
+        setTasks(tasksData);
+        setTeams(teamsData);
+      } catch (err) {
+        console.error("dashboard load failed", err);
+      }
     }
     fetchData();
   }, []);
 
+  const stats = [
+    {
+      label: "Projects",
+      value: projects.length,
+      hint: "View all projects",
+      to: "/projects",
+    },
+    {
+      label: "My tasks",
+      value: tasks.length,
+      hint: "Tasks assigned to you",
+      to: "/tasks",
+    },
+    {
+      label: "Teams",
+      value: teams.length,
+      hint: "View all teams",
+      to: "/teams",
+    },
+  ];
+
   return (
-    <div style={{ display: "flex", gap: "16px" }}>
-      <div className="card">
-        <p>
-          <strong>Projects</strong>
-        </p>
-        <p>{project.length}</p>
+    <>
+      <div className="page-header">
+        <h1>Dashboard</h1>
+        <span className="page-header__subtitle">Overview of your workspace</span>
       </div>
 
-      <div className="card">
-        <p>
-          <strong>Tasks Assigned</strong>
-        </p>
-        <p>{task.length}</p>
+      <div className="dashboard-grid">
+        {stats.map((s) => (
+          <div
+            key={s.label}
+            className="stat-card"
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate(s.to)}
+            onKeyDown={(e) => (e.key === "Enter" ? navigate(s.to) : null)}
+          >
+            <div className="stat-card__label">{s.label}</div>
+            <div className="stat-card__value">{s.value}</div>
+            <div className="stat-card__hint">{s.hint}</div>
+          </div>
+        ))}
       </div>
-
-      <div className="card">
-        <p>
-          <strong>Teams</strong>
-        </p>
-        <p>{team.length}</p>
-      </div>
-    </div>
+    </>
   );
 }
