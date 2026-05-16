@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Accidental top-level installs (each subproject manages its own)
+/node_modules/
+/package.json
+/package-lock.json
+
+# Env files at the root (each subproject has its own .env where needed)
+.env
+.env.local
