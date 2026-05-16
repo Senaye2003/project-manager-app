@@ -101,10 +101,11 @@ export const validateCreateProject = [
       return true;
       }),
 
+    // projectManagerId is OPTIONAL on create — the controller always uses
+    // req.user.id (the authenticated MANAGER making the request).
+    // If a caller does send one, validate it the same way as before.
     body('projectManagerId')
-    .exists({ checkFalsy: true })
-    .withMessage('project must be assigned a manager')
-    .bail()
+    .optional({ checkFalsy: true })
     .trim()
     .escape()
     .toInt()
@@ -114,7 +115,6 @@ export const validateCreateProject = [
       if (value && !(await userIdExist(value))) {
         throw new Error(`projectManagerId: ${value} does not correspond to an existing user`);
       }
-      // ensure the referenced user is a MANAGER
       const user = await getUserById(value);
       if (!user || user.role !== 'MANAGER') {
         throw new Error(`projectManagerId: ${value} must reference a user with role MANAGER`);

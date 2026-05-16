@@ -24,7 +24,7 @@ router.get('/projects/:id', authenticate, validateProjectId, getProjectByIdHandl
 
 router.post('/projects', authenticate, authorizeRole('MANAGER'), validateCreateProject, createProjectHandler);
 
-router.put('/projects/:id', authenticate, authorizeRole('MANAGER'), validateProjectId, validateUpdateProject, updateProjectHandler);
+router.patch('/projects/:id', authenticate, authorizeRole('MANAGER'), validateProjectId, validateUpdateProject, updateProjectHandler);
 
 router.delete('/projects/:id', authenticate, authorizeRole('MANAGER'), validateProjectId, deleteProjectHandler);
 

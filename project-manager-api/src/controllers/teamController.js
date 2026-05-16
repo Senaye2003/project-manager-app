@@ -28,6 +28,9 @@ export async function createTeamHandler(req, res, next){
             return next(err);
         }
         let newTeam = await createTeam(data);
+        // Auto-add the creator as a member so they can edit/delete the team
+        // they just made (authorizeTeamMembership on PUT/DELETE requires it).
+        await addMember(newTeam.id, req.user.id);
         res.status(201).json(newTeam);
     } catch(error){
         next(error);
@@ -58,12 +61,13 @@ export async function updateTeamHandler(req, res, next){
         if (req.body.projects) updates.projects = req.body.projects;
         */
        if (updates.name){
-        const exist = await teamExist(updates.name);
+        // Exclude the team being edited so keeping the same name doesn't 409
+        const exist = await teamExist(updates.name, id);
         if (exist){
             const err = new Error("Duplicate team name exists")
             err.status = 409;
             return next(err);
-       } 
+       }
     }
     const updatedTeam = await updateTeam(id, updates)
     res.status(200).json(updatedTeam);

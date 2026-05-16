@@ -39,6 +39,9 @@ export async function createTaskHandler(req, res) {
 export async function updateTaskHandler(req, res) {
     const id = parseInt(req.params.id);
     const updates = {};
+    if (req.body.title){
+        updates.title = req.body.title;
+    }
     if (req.body.status){
         updates.status = req.body.status;
     }
@@ -49,6 +52,9 @@ export async function updateTaskHandler(req, res) {
     }
     if (req.body.assignedTo){
         updates.assignedTo = parseInt(req.body.assignedTo);
+    }
+    if (req.body.projectId){
+        updates.projectId = parseInt(req.body.projectId);
     }
 
     const updatedTask = await updateTask(id, updates);

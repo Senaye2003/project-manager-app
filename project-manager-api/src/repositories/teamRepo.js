@@ -72,9 +72,13 @@ export async function update(id, updates){
 
 export async function remove(id){
     try {
-        const deletedTeam = await prisma.team.delete({
-            where: { id }
-        })
+        // team_members.team_id has ON DELETE RESTRICT, so we must clear
+        // membership rows before deleting the team. Wrap in a transaction
+        // so a failure halfway through doesn't leave orphaned rows.
+        const deletedTeam = await prisma.$transaction(async (tx) => {
+            await tx.teamMember.deleteMany({ where: { teamId: id } });
+            return await tx.team.delete({ where: { id } });
+        });
         return deletedTeam;
     } catch (error) {
         if (error.code === 'P2025') return null;
@@ -114,9 +118,12 @@ export async function deleteMember(teamId, userId) {
     }
 }
 
-export async function teamExist(name) {
+export async function teamExist(name, excludeId = null) {
     const idx = await prisma.team.findFirst({
-        where: { name }
+        where: {
+            name,
+            ...(excludeId ? { id: { not: excludeId } } : {}),
+        }
     });
     return !!idx;
 }

@@ -33,21 +33,26 @@ export async function getProjectByIdHandler(req, res) {
 }
 
 export async function createProjectHandler(req, res) {
-  const data = {
-    name: req.body.name,
-    description: req.body.description,
-    status: req.body.status ?? 'TO_DO',
-    startDate: req.body.startDate,
-    teamId: req.body.teamId ? parseInt(req.body.teamId) : undefined,
-    projectManagerId: req.body.projectManagerId ? parseInt(req.body.projectManagerId) : undefined,
-  };
-  if (req.body.startDate){
-        //convert startDate to ISOstring so Prisma doesn't get mad (wants a full ISO8601)
-        const date = new Date(req.body.startDate);
-        data.startDate = date.toISOString();
-  };
-  let newProject = await createProject(data);
-  res.status(201).json(newProject);
+  try {
+    const data = {
+      name: req.body.name,
+      description: req.body.description,
+      status: req.body.status ?? "TO_DO",
+      startDate: req.body.startDate
+        ? new Date(req.body.startDate).toISOString()
+        : undefined,
+      teamId: parseInt(req.body.teamId),
+      projectManagerId: req.user.id, // or req.user.userId
+    };
+
+    const newProject = await createProject(data);
+    res.status(201).json(newProject);
+  } catch (error) {
+    console.error("create project failed:", error);
+    res.status(500).json({
+      message: error.message || "Failed to create project",
+    });
+  }
 }
 
 export async function updateProjectHandler(req, res) {

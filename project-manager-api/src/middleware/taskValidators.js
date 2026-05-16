@@ -80,6 +80,16 @@ export const validateTaskId = [
 ];
 
 export const validateUpdateTask = [
+    //title is optional on update, but if provided must be at least 3 chars
+    body('title')
+        .optional({ checkFalsy: true })
+        .trim()
+        .escape()
+        .isString()
+        .withMessage('title must be a string')
+        .bail()
+        .isLength({ min: 3 })
+        .withMessage('title must be at least 3 characters'),
     //status must be oneof the ENUMS
     body('status')
         .optional()
