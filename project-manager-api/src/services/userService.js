@@ -30,17 +30,11 @@ export async function signup(name, email, password, role = 'DEVELOPER') {
 
 export async function login(email, password) {
   const normalizedEmail = email.trim().toLowerCase();
-  console.log("email from request:", normalizedEmail);
-  console.log("password from request:", password);
 
   const user = await findByEmail(normalizedEmail);
-  console.log("user found:", user ? user.email : null);
-
   if (!user) throw new Error("Invalid credentials.");
 
   const valid = await bcrypt.compare(password, user.password);
-  console.log("password valid:", valid);
-
   if (!valid) throw new Error("Invalid credentials.");
 
   const token = jwt.sign(

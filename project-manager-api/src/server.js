@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -12,7 +11,24 @@ import YAML from 'yamljs';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// Allow comma-separated FRONTEND_URL=https://app.example.com,https://staging.example.com
+// In local dev, fall back to Vite's default.
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow requests with no origin (curl, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    credentials: true,
+  })
+);
 app.use(morgan('tiny'));
 app.use(express.json());
 

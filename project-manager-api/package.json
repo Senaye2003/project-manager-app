@@ -1,13 +1,17 @@
 {
-  "name": "final-project-template",
+  "name": "project-manager-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for the Project Manager full-stack app",
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "node --env-file=.env --watch src/server.js"
+    "dev": "node --env-file=.env --watch src/server.js",
+    "start": "node src/server.js",
+    "build": "prisma generate",
+    "migrate:deploy": "prisma migrate deploy",
+    "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
