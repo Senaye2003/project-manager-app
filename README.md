@@ -20,7 +20,6 @@ The database is pre-seeded with four users — log in with any of them to skip s
 
 The free-tier backend on Render sleeps after 15 minutes of inactivity. The first request after sleep takes ~30 seconds to wake up — subsequent requests are fast.
 
-## Features
 
 ## Features
  
